@@ -1,0 +1,248 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Вибач мене 💌</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Caveat:wght@500;700&family=Marck+Script&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --pink1:#ffd6e8;
+    --pink2:#ffb6d5;
+    --pink3:#ff8fc0;
+    --red:#e8365a;
+    --red-dark:#c22548;
+    --ink:#6b1f3a;
+    box-sizing:border-box;
+    padding-top:env(safe-area-inset-top,0px);
+    padding-bottom:env(safe-area-inset-bottom,0px);
+  }
+  *{box-sizing:border-box;}
+  html{scroll-padding-top:env(safe-area-inset-top,0px);}
+  html,body{
+    height:100%;
+    margin:0;
+    overflow:hidden;
+    font-family:'Caveat', cursive;
+    background:linear-gradient(160deg,var(--pink1),var(--pink2) 60%,var(--pink3));
+  }
+  #hearts{
+    position:fixed;
+    inset:0;
+    pointer-events:none;
+    z-index:1;
+  }
+  .heart{
+    position:absolute;
+    top:-10vh;
+    font-size:22px;
+    color:#ff5c8a;
+    filter:drop-shadow(0 2px 2px rgba(200,20,80,.25));
+    opacity:.9;
+    animation-name:fall;
+    animation-timing-function:linear;
+    animation-iteration-count:infinite;
+  }
+  @keyframes fall{
+    to{ transform:translateY(120vh) rotate(360deg); }
+  }
+
+  .stage{
+    position:relative;
+    z-index:2;
+    height:100%;
+    width:100%;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    padding:16px;
+  }
+
+  /* ===== Envelope ===== */
+  #envelope-wrap{
+    cursor:pointer;
+    user-select:none;
+    transition:transform .4s ease, opacity .4s ease;
+  }
+  #envelope-wrap.hide{
+    transform:scale(.6) translateY(-40px);
+    opacity:0;
+    pointer-events:none;
+  }
+  .envelope{
+    position:relative;
+    width:min(78vw,320px);
+    aspect-ratio:3/2;
+    background:linear-gradient(160deg,#fff0f5,#ffe1ec);
+    border-radius:10px;
+    box-shadow:0 18px 40px rgba(180,30,80,.35), 0 2px 0 rgba(255,255,255,.6) inset;
+  }
+  .envelope::before,
+  .envelope::after{
+    content:"";
+    position:absolute;
+    top:0;
+    width:50%;
+    height:100%;
+    background:#ffd7e6;
+  }
+  .envelope::before{
+    left:0;
+    clip-path:polygon(0 0,100% 50%,0 100%);
+  }
+  .envelope::after{
+    right:0;
+    clip-path:polygon(100% 0,0 50%,100% 100%);
+  }
+  .flap{
+    position:absolute;
+    top:0; left:0;
+    width:100%; height:60%;
+    background:linear-gradient(160deg,#ffb6d5,#ff8fc0);
+    clip-path:polygon(0 0,100% 0,50% 90%);
+    border-radius:10px 10px 0 0;
+    transform-origin:top center;
+    transition:transform .6s ease;
+    z-index:3;
+  }
+  #envelope-wrap.open .flap{
+    transform:rotateX(180deg);
+  }
+  .seal{
+    position:absolute;
+    left:50%; top:38%;
+    width:56px; height:56px;
+    transform:translate(-50%,-50%);
+    background:radial-gradient(circle at 35% 30%, #ff5c78, var(--red) 55%, var(--red-dark) 100%);
+    border-radius:50%;
+    box-shadow:0 6px 14px rgba(160,10,50,.5), inset 0 -3px 6px rgba(0,0,0,.25), inset 0 2px 4px rgba(255,255,255,.4);
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    color:#fff0f2;
+    font-size:26px;
+    z-index:5;
+    animation:pulse 1.8s ease-in-out infinite;
+  }
+  @keyframes pulse{
+    0%,100%{ transform:translate(-50%,-50%) scale(1); }
+    50%{ transform:translate(-50%,-50%) scale(1.07); }
+  }
+  .hint{
+    text-align:center;
+    color:var(--ink);
+    font-size:22px;
+    margin-top:18px;
+    opacity:.85;
+  }
+
+  /* ===== Card ===== */
+  #card{
+    position:absolute;
+    z-index:2;
+    width:min(88vw,420px);
+    max-height:82vh;
+    overflow-y:auto;
+    -webkit-overflow-scrolling:touch;
+    background:#fffafc;
+    border-radius:18px;
+    padding:34px 28px 28px;
+    box-shadow:0 25px 60px rgba(150,20,70,.4);
+    opacity:0;
+    transform:scale(.7) translateY(40px);
+    pointer-events:none;
+    transition:opacity .5s ease .15s, transform .5s cubic-bezier(.2,1.4,.4,1) .15s;
+    border:2px dashed #ffc2d9;
+  }
+  #card.show{
+    opacity:1;
+    transform:scale(1) translateY(0);
+    pointer-events:auto;
+  }
+  #card h1{
+    text-align:center;
+    color:var(--red);
+    font-family:'Marck Script', cursive;
+    font-size:38px;
+    margin:0 0 14px;
+  }
+  #text{
+    font-size:26px;
+    line-height:1.5;
+    color:var(--ink);
+    min-height:160px;
+    outline:none;
+    white-space:pre-wrap;
+  }
+  .signature{
+    text-align:right;
+    font-size:24px;
+    color:var(--red-dark);
+    margin-top:10px;
+  }
+</style>
+</head>
+<body>
+
+<div id="hearts"></div>
+
+<div class="stage">
+  <div id="envelope-wrap">
+    <div class="envelope">
+      <div class="flap"></div>
+      <div class="seal" id="seal">❤</div>
+    </div>
+    <div class="hint">натисни на печатку</div>
+  </div>
+
+  <div id="card">
+    <h1>Вибач мене 🌸</h1>
+    <div id="text">Дашуль, я був не правий, вибач мене будь ласка, я сьогодні цілий день думав як вибачитися, кращого способу за такий я не придумав, ще раз вибач мене я незнаю як словами передати що я до тебе відчуваю, і цьої листівки буде мало, но знай я тебе люблю, і я нізчим це не путаю, бо легше полюбити коли відчуваєш що тебе теж люблять, я більше так не буду, чесно чесно. Люблю ❤</div>
+    <div class="signature">З любов'ю 💕</div>
+  </div>
+</div>
+
+<script>
+  // falling iPhone-style hearts
+  const emojis = ["💗","💖","💕","❤️","💘","💓"];
+  const container = document.getElementById('hearts');
+  const COUNT = 26;
+  for(let i=0;i<COUNT;i++){
+    const h = document.createElement('div');
+    h.className='heart';
+    h.textContent = emojis[Math.floor(Math.random()*emojis.length)];
+    h.style.left = Math.random()*100+'vw';
+    const size = 16 + Math.random()*22;
+    h.style.fontSize = size+'px';
+    const dur = 7 + Math.random()*8;
+    h.style.animationDuration = dur+'s';
+    h.style.animationDelay = (-Math.random()*dur)+'s';
+    h.style.opacity = 0.55 + Math.random()*0.45;
+    container.appendChild(h);
+  }
+
+  const wrap = document.getElementById('envelope-wrap');
+  const card = document.getElementById('card');
+  const seal = document.getElementById('seal');
+
+  seal.addEventListener('click', (e)=>{
+    e.stopPropagation();
+    open();
+  });
+  wrap.addEventListener('click', open);
+
+  let opened = false;
+  function open(){
+    if(opened) return;
+    opened = true;
+    wrap.classList.add('open');
+    setTimeout(()=>{
+      wrap.classList.add('hide');
+      card.classList.add('show');
+    }, 500);
+  }
+</script>
+
+</body>
+</html>
